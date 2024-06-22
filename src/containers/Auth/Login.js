@@ -4,6 +4,7 @@ import { push } from "connected-react-router";
 import * as actions from "../../store/actions";
 import './Login.scss';
 import { FormattedMessage } from 'react-intl';
+import {handleLoginApi} from '../../services/userService';
 
 class Login extends Component {
     constructor(props) {
@@ -11,6 +12,8 @@ class Login extends Component {
 		this.state = {
 			username: '',
 			password: '',
+			isShowPassword: false,
+			errorMessage: '',
 		}
 	}
 
@@ -26,8 +29,19 @@ class Login extends Component {
 		})
 	}
 
-	handleLogin = () => {
-		console.log('username: ', this.state.username, ' password: ', this.state.password);
+	handleLogin = async () => {
+		this.setState({
+			errMessage: ''
+		})	
+		try {
+			await handleLoginApi(this.state.username, this.state.password);
+		} catch (error) {
+			console.log(error);
+			console.log('leengoc', error.message);
+			this.setState({
+                errMessage: error.message
+            })
+		}
 	}
 
 	handleShowHidePassword = (event) => {
@@ -66,6 +80,10 @@ class Login extends Component {
 								</span>
 								
 							</div>
+						</div>
+
+						<div className='col-12' style={{color: "red"}}>
+							{this.state.errMessage}
 						</div>
 						<div className='col-12'>
 							<button className='btn-login' onClick={this.handleLogin}>Log in</button>
