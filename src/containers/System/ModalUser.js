@@ -3,6 +3,7 @@ import React, { Component } from 'react';
 import { FormattedMessage } from 'react-intl';
 import { connect } from 'react-redux';
 import { Button, Modal, ModalHeader, ModalBody, ModalFooter } from 'reactstrap';
+import { emitter } from '../../utils/emitter';
 
 class ModalUser extends Component {
 	constructor(props) {
@@ -14,6 +15,19 @@ class ModalUser extends Component {
 			lastName: '',
 			address: '',
     	}
+		this.listenToEmitter();
+	}
+
+	listenToEmitter() {
+		emitter.on('EVENT_CLEAR_MODAL_DATA', () => {
+			this.setState({
+				email: '',
+				password: '',
+				firstName: '',
+				lastName: '',
+				address: '',
+			})
+		})
 	}
     
     componentDidMount() {
@@ -40,7 +54,7 @@ class ModalUser extends Component {
 		})
 	}
 
-	checkValideInput = () => {
+	checkValidateInput = () => {
 		let isValid = true;
 		let arrInput = ['email', 'password', 'firstName', 'lastName', 'address'];
 		for (let i = 0; i < arrInput.length; i++) {
@@ -54,7 +68,7 @@ class ModalUser extends Component {
 	}
 
 	handleAddNewUser = () => {
-		let isValid = this.checkValideInput();
+		let isValid = this.checkValidateInput();
 		if (isValid === true) {
 			//Call API to add new user
 			this.props.createNewUser(this.state);
