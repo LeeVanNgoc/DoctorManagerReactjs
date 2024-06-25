@@ -17,6 +17,7 @@ class ModalUser extends Component {
 	}
     
     componentDidMount() {
+		
     }
 
 	handleOnchangeInput = (even, id) => {
